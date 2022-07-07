@@ -20,30 +20,36 @@ namespace BotTgExperiment
 
             var sb = new StringBuilder();
 
-            var urlButton = new InlineKeyboardButton("Google");
-            var urlButton2 = new InlineKeyboardButton("Yandex");
-
-            urlButton.Url = "https://www.google.com";
-            urlButton2.Url = "https://www.yandex.ru";
-
-            InlineKeyboardButton[] buttons = new InlineKeyboardButton[] { urlButton, urlButton2 };
-            InlineKeyboardMarkup buttonForStart = new InlineKeyboardMarkup(urlButton);
-
-            InlineKeyboardMarkup inline = new InlineKeyboardMarkup(buttons);
-
             if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
             {
                 var message = update.Message;
 
-                if (message.Text.ToLower() == "/start")
+
+                if (message.Text != null)
                 {
-                    await botClient.SendTextMessageAsync(message.Chat,
-                        "Категорически приветствую!", replyMarkup: buttonForStart);
-                    return;
+                    await botClient.SendTextMessageAsync(message.Chat, "Читаю вас 👍", replyMarkup: GetKeyboardButtons());
+
+                    if (message.Text == "Контакты ☎️")
+                    {
+                        await botClient.SendTextMessageAsync(message.Chat, "Воспользуйте удобным для вас способом:\n  \n +1111111111111 \n  \n +1111111111111", 
+                            replyMarkup: GetInlineKeyboardContacts());
+                        return;
+                    }
+                }
+                else
+                {
+                    await botClient.SendTextMessageAsync(message.Chat, "Я не совсем вас понял...", replyMarkup: GetKeyboardButtons());
                 }
 
-                await botClient.SendTextMessageAsync(message.Chat,
-                    "Шалом!", replyMarkup: inline);
+                //await botClient.SendTextMessageAsync(message.Chat, message.Text, replyMarkup: GetKeyboardButtons());
+
+                //if (message.Text.ToLower() == "/start")
+                //{
+                //    await botClient.SendTextMessageAsync(message.Chat,
+                //        "Категорически приветствую!", replyMarkup: GetKeyboardButtons());
+                //    return;
+                //}
+
             }
         }
 
@@ -51,6 +57,55 @@ namespace BotTgExperiment
         {
             Console.WriteLine(Newtonsoft.Json.JsonConvert
                 .SerializeObject(exception));
+        }
+
+        private static IReplyMarkup GetKeyboardButtons()
+        {
+            return new ReplyKeyboardMarkup(new List<List<KeyboardButton>>
+            {
+                   new List<KeyboardButton>
+                   {
+                       new KeyboardButton ("О нас 📋"),
+                       new KeyboardButton ("Контакты ☎️")
+                   },
+            
+                   new List<KeyboardButton>
+                   {
+                       new KeyboardButton ("Оставьте заявку ✅")
+                   }
+            })
+                   {
+                       ResizeKeyboard = true
+                   };
+        }
+
+        private static IReplyMarkup GetInlineKeyboardContacts()
+        {
+            return new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>>
+            {
+                //new List<InlineKeyboardButton>
+                //{
+                //    new InlineKeyboardButton("+1111111112"){ },
+                //    new InlineKeyboardButton("+2222222222"){CallbackData = "+2222222222" }
+                //},
+
+                new List<InlineKeyboardButton>
+                {
+                    new InlineKeyboardButton("Instagram") {Url = "https://www.instagram.com" }
+                }
+            });
+        }
+
+        private static IReplyMarkup GetInlineKeyboardSearch()
+        {
+            return new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>>
+            {
+                new List<InlineKeyboardButton>
+                {
+                    new InlineKeyboardButton("Google") {Url = "https://www.google.com" },
+                    new InlineKeyboardButton("Yandex") { Url = "https://www.yandex.ru" }
+                }
+            });
         }
     }
 }
