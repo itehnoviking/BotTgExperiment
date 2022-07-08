@@ -11,7 +11,7 @@ namespace BotTgExperiment
 {
     class BrainMethods
     {
-        public static ITelegramBotClient Bot { get; set; } = new TelegramBotClient("token");
+        public static ITelegramBotClient Bot { get; set; } = new TelegramBotClient("TOKEN");
 
 
         public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancelllationToken)
@@ -28,7 +28,7 @@ namespace BotTgExperiment
                 {
                     if (message.Text.ToLower() == "/start")
                     {
-                        await botClient.SendTextMessageAsync(message.Chat, "Добро пожаловать в наш бот!", replyMarkup: GetKeyboardButtons());
+                        await botClient.SendTextMessageAsync(message.Chat, "Добро пожаловать в наш бот!", replyMarkup: Buttons.GetKeyboardButtons());
                         return;
                     }
 
@@ -41,7 +41,7 @@ namespace BotTgExperiment
                     if (message.Text == "Контакты ☎️")
                     {
                         await botClient.SendTextMessageAsync(message.Chat, "Воспользуйте удобным для вас способом:\n  \n +1111111111111 \n  \n +1111111111111",
-                            replyMarkup: GetInlineKeyboardContacts());
+                            replyMarkup: Buttons.GetInlineKeyboardContacts());
                         return;
                     }
 
@@ -73,7 +73,7 @@ namespace BotTgExperiment
 
                 else
                 {
-                    await botClient.SendTextMessageAsync(message.Chat, "Я не совсем вас понял...", replyMarkup: GetKeyboardButtons());
+                    await botClient.SendTextMessageAsync(message.Chat, "Я не совсем вас понял...", replyMarkup: Buttons.GetKeyboardButtons());
                     return;
                 }
             }
@@ -85,52 +85,5 @@ namespace BotTgExperiment
                 .SerializeObject(exception));
         }
 
-        private static IReplyMarkup GetKeyboardButtons()
-        {
-            return new ReplyKeyboardMarkup(new List<List<KeyboardButton>>
-            {
-                   new List<KeyboardButton>
-                   {
-                       new KeyboardButton ("О нас 🧑🏻‍💻"),
-                       new KeyboardButton ("Контакты ☎️")
-                   },
-
-                   new List<KeyboardButton>
-                   {
-                       new KeyboardButton ("Наш прайс 📋")
-                   },
-
-                   new List<KeyboardButton>
-                   {
-                       new KeyboardButton ("Оставьте заявку ✅")
-                   }
-            })
-            {
-                ResizeKeyboard = true
-            };
-        }
-
-        private static IReplyMarkup GetInlineKeyboardContacts()
-        {
-            return new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>>
-            {
-                new List<InlineKeyboardButton>
-                {
-                    new InlineKeyboardButton("Instagram") {Url = "https://www.instagram.com" }
-                }
-            });
-        }
-
-        private static IReplyMarkup GetInlineKeyboardSearch()
-        {
-            return new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>>
-            {
-                new List<InlineKeyboardButton>
-                {
-                    new InlineKeyboardButton("Google") {Url = "https://www.google.com" },
-                    new InlineKeyboardButton("Yandex") { Url = "https://www.yandex.ru" }
-                }
-            });
-        }
     }
 }
