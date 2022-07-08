@@ -11,7 +11,7 @@ namespace BotTgExperiment
 {
     class BrainMethods
     {
-        public static ITelegramBotClient Bot { get; set; } = new TelegramBotClient("TOKEN");
+        public static ITelegramBotClient Bot { get; set; } = new TelegramBotClient("token");
 
 
         public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancelllationToken)
@@ -53,26 +53,22 @@ namespace BotTgExperiment
 
                     if (message.Text == "Оставьте заявку ✅")
                     {
-                        await botClient.SendTextMessageAsync(message.Chat, "Оставьте заявку и мы вам совсем скоро перезвоним!");
+                        await botClient.SendTextMessageAsync(message.Chat, "Оставьте свой номер телефона и мы вам совсем скоро перезвоним:");
 
-                        if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
-                        {
-                            var requestMessage = update.Message;
-
-                            if (requestMessage.Text != "/start" &
-                            requestMessage.Text != "О нас 🧑🏻‍💻" &
-                            requestMessage.Text != "Контакты ☎️" &&
-                            requestMessage.Text != "Наш прайс 📋" &&
-                            requestMessage.Text != "Оставьте заявку ✅")
-                            {
-
-
-                                await botClient.CopyMessageAsync(-1001636182201, 897914027, requestMessage.MessageId);
-                                return;
-                            }
-                            return;
-                        }
+                        return;
                     }
+
+                    if (message.Text != "/start" &
+                        message.Text != "О нас 🧑🏻‍💻" &
+                        message.Text != "Контакты ☎️" &&
+                        message.Text != "Наш прайс 📋" &&
+                        message.Text != "Оставьте заявку ✅")
+                    {
+                        await botClient.CopyMessageAsync(-1001636182201, 897914027, message.MessageId);
+                        await botClient.SendTextMessageAsync(message.Chat, "Спасибо! Скоро мы с вами свяжемся.");
+                        return;
+                    }
+
                 }
 
                 else
