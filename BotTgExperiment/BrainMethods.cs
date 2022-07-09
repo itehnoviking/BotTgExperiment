@@ -13,12 +13,9 @@ namespace BotTgExperiment
     {
         public static ITelegramBotClient Bot { get; set; } = new TelegramBotClient("TOKEN");
 
-
         public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancelllationToken)
         {
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
-
-            //var sb = new StringBuilder();
 
             if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
             {
@@ -60,8 +57,8 @@ namespace BotTgExperiment
 
                     if (message.Text != "/start" &
                         message.Text != "О нас 🧑🏻‍💻" &
-                        message.Text != "Контакты ☎️" &&
-                        message.Text != "Наш прайс 📋" &&
+                        message.Text != "Контакты ☎️" &
+                        message.Text != "Наш прайс 📋" &
                         message.Text != "Оставьте заявку ✅")
                     {
                         await botClient.CopyMessageAsync(-1001636182201, 897914027, message.MessageId);
