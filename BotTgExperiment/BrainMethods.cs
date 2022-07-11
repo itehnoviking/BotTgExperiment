@@ -13,6 +13,14 @@ namespace BotTgExperiment
     {
         public static ITelegramBotClient Bot { get; set; } = new TelegramBotClient("TOKEN");
 
+
+        public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancelllationToken)
+        {
+            Console.WriteLine(Newtonsoft.Json.JsonConvert
+                .SerializeObject(exception));
+        }
+
+
         public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancelllationToken)
         {
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
@@ -51,9 +59,8 @@ namespace BotTgExperiment
                     if (message.Text == "Оставьте заявку ✅")
                     {
                         await botClient.SendTextMessageAsync(message.Chat, "Оставьте свой номер телефона и мы вам совсем скоро перезвоним:");
-
-                        return;
                     }
+
 
                     if (message.Text != "/start" &
                         message.Text != "О нас 🧑🏻‍💻" &
@@ -61,26 +68,21 @@ namespace BotTgExperiment
                         message.Text != "Наш прайс 📋" &
                         message.Text != "Оставьте заявку ✅")
                     {
-                        await botClient.CopyMessageAsync(-1001636182201, 897914027, message.MessageId);
+                        await botClient.CopyMessageAsync(-1001636182201, message.From.Id, message.MessageId);
                         await botClient.SendTextMessageAsync(message.Chat, "Спасибо! Скоро мы с вами свяжемся.");
                         return;
                     }
 
+
                 }
 
-                else
-                {
-                    await botClient.SendTextMessageAsync(message.Chat, "Я не совсем вас понял...", replyMarkup: Buttons.GetKeyboardButtons());
-                    return;
-                }
+
             }
         }
-
-        public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancelllationToken)
-        {
-            Console.WriteLine(Newtonsoft.Json.JsonConvert
-                .SerializeObject(exception));
-        }
-
     }
+
+    
+
+
 }
+
